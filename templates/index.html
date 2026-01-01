@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head><title>Blind SQLi 200/500</title></head>
+<body style="font-family:monospace; background:#000; color:#0f0; padding:50px;">
+    <h1>🚨 Blind SQLi - 200/500 Detection</h1>
+    
+    <form>
+        <input name="tracking_id" value="{{ tid or '' }}" 
+               placeholder="ORD-12345" style="width:400px; padding:10px; background:#111; color:#0f0; border:1px solid #0f0;">
+        <button style="padding:10px 20px; background:#f00; color:#000; border:none;">Test /track</button>
+    </form>
+    
+    <h3>/track Result: <span style="color: {% if valid %}#0f0{% else %}#f00{% endif %}">{{ '✅ 200 OK' if valid else '❌ 500 ERROR' }}</span></h3>
+    
+    <h3>Test Payloads:</h3>
+    <div style="background:#111; padding:20px;">
+        <div><a href="/track?tracking_id=ORD-12345" target="_blank">✅ ORD-12345 → 200</a></div>
+        <div><a href="/track?tracking_id=ORD-12345' AND 1=1--" target="_blank">✅ AND 1=1 → 200</a></div>
+        <div><a href="/track?tracking_id=ORD-12345' AND 1=2--" target="_blank">❌ AND 1=2 → 500</a></div>
+        <div><a href="/track?tracking_id=ORD-12345'; SLEEP(5)--" target="_blank">⏱️ TIME → 200 (5s)</a></div>
+    </div>
+</body>
+</html>
